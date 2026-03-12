@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class Driver {
 
     private NewsFeed newsFeed = new NewsFeed();
@@ -11,7 +13,7 @@ public class Driver {
     }
 
     private int mainMenu(){
-        return ScannerInput.readNextInt("""
+        return JScannerInput.readNextInt("""
                Social Network Menu
                   ---------------------
                   1) Add a Message Post
@@ -20,7 +22,7 @@ public class Driver {
                   4) Delete a Message Post
                   ---------------------
                   0) Exit
-               ==>>  """);
+               ==>>""");
     }
 
     private void runMenu(){
@@ -33,40 +35,36 @@ public class Driver {
                 case 2 -> showPosts();
                 case 3 -> updateMessagePost();
                 case 4 -> deleteMessagePost();
-                default -> System.out.println("Invalid option entered: " + option);
+                default -> JScannerInput.showErrorMessage("Invalid option entered: " + option,"Error");
             }
-
-            //pause the program so that the user can read what we just printed to the terminal window
-            ScannerInput.readNextLine("\nPress enter key to continue...");
 
             //display the main menu again
             option = mainMenu();
         }
 
         //the user chose option 0, so exit the program
-        System.out.println("Exiting...bye");
+        JScannerInput.showMessage("Exiting...bye","Exit App");
         System.exit(0);
     }
 
     //gather the message post data from the user and add the new message post object to the arraylist
     private void addMessagePost(){
 
-        String authorName = ScannerInput.readNextLine("Enter the Author Name:  ");
-        String message = ScannerInput.readNextLine("Enter the Message:  ");
+        String authorName = JScannerInput.readNextLine("Enter the Author Name:  ");
+        String message = JScannerInput.readNextLine("Enter the Message:  ");
 
         boolean isAdded = newsFeed.addPost(new MessagePost(authorName, message));
         if (isAdded){
-            System.out.println("Post Added Successfully");
+            JScannerInput.showMessage("Post Added Successfully","App Info");
         }
         else{
-            System.out.println("No Post Added");
+            JScannerInput.showErrorMessage("No Post Added","Error");
         }
     }
 
     //print the posts in newsfeed i.e. array list.
     private void showPosts(){
-        System.out.println("List of Messages are:");
-        System.out.println(newsFeed.show());
+        JScannerInput.showMessage(newsFeed.show(),"Message List");
     }
 
     //ask the user to enter the index of the object to update, and assuming it's valid,
@@ -75,21 +73,21 @@ public class Driver {
         showPosts();
         if (newsFeed.numberOfPosts() > 0){
             //only ask the user to choose the object to update if objects exist
-            int indexToUpdate = ScannerInput.readNextInt("Enter the index of the message to update ==> ");
+            int indexToUpdate = JScannerInput.readNextInt("Enter the index of the message to update ==> ");
             if (newsFeed.isValidIndex(indexToUpdate)){
-                String author = ScannerInput.readNextLine("Enter the Author Name:  ");
-                String message = ScannerInput.readNextLine("Enter the Message:  ");
+                String author = JScannerInput.readNextLine("Enter the Author Name:  ");
+                String message = JScannerInput.readNextLine("Enter the Message:  ");
 
                 //pass the index of the product and the new product details to Store for updating and check for success.
                 if (newsFeed.updateMessagePost(indexToUpdate, new MessagePost(author, message))){
-                    System.out.println("Update Successful");
+                    JScannerInput.showMessage("Update Successful","Update");
                 }
                 else{
-                    System.out.println("Update NOT Successful");
+                   JScannerInput.showErrorMessage("Update NOT Successful","Error");
                 }
             }
             else{
-                System.out.println("There are no messages for this index number");
+                JScannerInput.showMessage("There are no messages for this index number","Info Message");
             }
         }
     }
@@ -98,14 +96,14 @@ public class Driver {
         showPosts();
         if (newsFeed.numberOfPosts() > 0){
             //only ask the user to choose the message post to delete if posts exist
-            int indexToDelete = ScannerInput.readNextInt("Enter the index of the messgae post to delete ==> ");
+            int indexToDelete = JScannerInput.readNextInt("Enter the index of the messgae post to delete ==> ");
             //pass the index of the message post to NewsFeed for deleting and check for success.
             MessagePost messagePostToDelete = newsFeed.deleteMessagePost(indexToDelete);
             if (messagePostToDelete != null){
-                System.out.println("Delete Successful! Deleted message post: " + messagePostToDelete.display());
+                JScannerInput.showMessage("Delete Successful! Deleted message post: " + messagePostToDelete.display(),"Delete Message");
             }
             else{
-                System.out.println("Delete NOT Successful");
+                JScannerInput.showErrorMessage("Delete NOT Successful","Delete Error Message");
             }
         }
     }
